@@ -22,7 +22,7 @@ class Tensor {
 
     size_t size() const { return _data.size(); }
 
-    const float& get_element(const std::vector<size_t>& indices) const {
+    const float& element(const std::vector<size_t>& indices) const {
         return (_data[compute_index(indices)]);
     }
 

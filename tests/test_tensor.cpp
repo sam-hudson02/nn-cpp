@@ -1,6 +1,7 @@
 #include "nn/tensor.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <cstddef>
 #include <iostream>
 #include <type_traits>
 
@@ -24,6 +25,25 @@ TEST_CASE("Tensor all elements are initialized to zero", "[tensor]") {
         const float p = tensor.data()[i];
         std::cout << "Element " << i << ": " << p << std::endl;
         REQUIRE(p == 0.0f);
+    }
+}
+
+TEST_CASE("Tensor can get elements by index", "[tensor]") {
+    const size_t rows = 2;
+    const size_t cols = 3;
+
+    nn::Tensor tensor({2, 3});
+
+    for (size_t row_idx = 0; row_idx < rows; ++row_idx) {
+        for (size_t col_idx = 0; col_idx < cols; ++col_idx) {
+            const size_t index = row_idx * cols + col_idx;
+            const float input_value = float(row_idx * col_idx);
+
+            tensor.data()[index] = input_value;
+            const float stored_value = tensor.element({row_idx, col_idx});
+
+            REQUIRE(stored_value == input_value);
+        }
     }
 }
 
