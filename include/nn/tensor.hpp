@@ -26,6 +26,10 @@ class Tensor {
         return (_data[compute_index(indices)]);
     }
 
+    const float* data() const { return _data.data(); }
+
+    float* data() { return _data.data(); }
+
   private:
     std::vector<size_t> _shape;
     std::vector<float> _data;
