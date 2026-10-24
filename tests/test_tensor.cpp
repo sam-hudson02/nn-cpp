@@ -19,3 +19,9 @@ TEST_CASE("Tensor all elements are initialized to zero", "[tensor]") {
         }
     }
 }
+
+TEST_CASE("Tensor throws invalid argument exception for empty or zero dimensions", "[tensor]") {
+    REQUIRE_THROWS_AS(nn::Tensor({}), std::invalid_argument);
+    REQUIRE_THROWS_AS(nn::Tensor({0, 3}), std::invalid_argument);
+    REQUIRE_THROWS_AS(nn::Tensor({2, 0}), std::invalid_argument);
+}

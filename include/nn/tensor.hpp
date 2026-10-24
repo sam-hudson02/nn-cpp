@@ -1,13 +1,22 @@
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
+#include <stdexcept>
 #include <vector>
 
 namespace nn {
 
 class Tensor {
   public:
-    Tensor(std::vector<size_t> shape) : _shape(shape), _data(element_count(shape)) {}
+    Tensor(std::vector<size_t> shape) : _shape(shape), _data(element_count(shape)) {
+        if (_shape.empty()) {
+            throw std::invalid_argument("Shape cannot be empty");
+        }
+        if (std::any_of(_shape.begin(), _shape.end(), [](size_t dim) { return dim == 0; })) {
+            throw std::invalid_argument("Shape dimensions must be greater than zero");
+        }
+    }
 
     const std::vector<size_t>& shape() const { return _shape; }
 
