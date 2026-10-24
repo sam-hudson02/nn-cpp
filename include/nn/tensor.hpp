@@ -23,6 +23,9 @@ class Tensor {
     size_t size() const { return _data.size(); }
 
     const float& element(const std::vector<size_t>& indices) const {
+        if (indices.size() != _shape.size()) {
+            throw std::out_of_range("Number of indices does not match tensor dimensions");
+        }
         return (_data[compute_index(indices)]);
     }
 

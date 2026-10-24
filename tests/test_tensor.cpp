@@ -60,6 +60,13 @@ TEST_CASE("Tensor can write an element with data method and read it back", "[ten
     }
 }
 
+TEST_CASE("Tensor reading element with invalid indices throws out_of_range exception", "[tensor]") {
+    nn::Tensor tensor({2, 3});
+
+    REQUIRE_THROWS_AS(tensor.element({2}), std::out_of_range);
+    REQUIRE_THROWS_AS(tensor.element({1, 2, 3}), std::out_of_range);
+}
+
 TEST_CASE("Tensor throws invalid argument exception for empty or zero dimensions", "[tensor]") {
     REQUIRE_THROWS_AS(nn::Tensor({}), std::invalid_argument);
     REQUIRE_THROWS_AS(nn::Tensor({0, 3}), std::invalid_argument);
