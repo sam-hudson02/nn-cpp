@@ -26,14 +26,14 @@ TEST_CASE("Tensor all elements are initialized to zero", "[tensor]") {
 TEST_CASE("Tensor can write an element with data method and read it back", "[tensor]") {
     nn::Tensor tensor({2, 3});
     const float value = 42.0f;
-    const size_t index = 3;
 
-    REQUIRE(tensor.data()[index] == 0.0f);
+    for (size_t i = 0; i < tensor.size(); ++i) {
+        REQUIRE(tensor.data()[i] == 0.0f);
 
-    tensor.data()[index] = value;
-    const float read_value = tensor.data()[index];
-
-    REQUIRE(read_value == value);
+        tensor.data()[i] = value;
+        const float read_value = tensor.data()[i];
+        REQUIRE(read_value == value);
+    }
 }
 
 TEST_CASE("Tensor throws invalid argument exception for empty or zero dimensions", "[tensor]") {
