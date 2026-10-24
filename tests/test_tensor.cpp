@@ -2,6 +2,10 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+#include <type_traits>
+
+static_assert(!std::is_default_constructible_v<nn::Tensor>,
+              "a Tensor must always be given a shape");
 
 TEST_CASE("Tensor reports its shape and size correctly", "[tensor]") {
     const nn::Tensor tensor({2, 3});
