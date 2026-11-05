@@ -22,6 +22,7 @@ endif()
 # ---- the library -----------------------------------------------------------
 add_library(nn
   src/gemm.cpp
+  src/transform.cpp
 )
 target_include_directories(nn PUBLIC include)
 target_link_libraries(nn PRIVATE nn_warnings)
@@ -53,6 +54,7 @@ if(NN_BUILD_TESTS)
   add_executable(nn_tests
     tests/test_tensor.cpp
     tests/test_gemm.cpp
+    tests/test_transform.cpp
   )
   target_link_libraries(nn_tests PRIVATE nn nn_warnings eigen_headers Catch2::Catch2WithMain)
 
