@@ -16,6 +16,7 @@ class Tensor {
         if (std::any_of(_shape.begin(), _shape.end(), [](size_t dim) { return dim == 0; })) {
             throw std::invalid_argument("Shape dimensions must be greater than zero");
         }
+        _strides = compute_strides(_shape);
     }
 
     const std::vector<size_t>& shape() const { return _shape; }
@@ -26,6 +27,12 @@ class Tensor {
         if (indices.size() != _shape.size()) {
             throw std::out_of_range("Number of indices does not match tensor dimensions");
         }
+        // Check if any index is out of range
+        for (size_t i = 0; i < indices.size(); ++i) {
+            if (indices[i] >= _shape[i]) {
+                throw std::out_of_range("Index out of range for dimension " + std::to_string(i));
+            }
+        }
         return (_data[compute_index(indices)]);
     }
 
@@ -35,10 +42,16 @@ class Tensor {
 
   private:
     std::vector<size_t> _shape;
+    std::vector<size_t> _strides;
     std::vector<float> _data;
 
     size_t compute_index(const std::vector<size_t>& indices) const {
-        return indices[0] * _shape[1] + indices[1];
+        // return indices[0] * _shape[1] + indices[1];
+        size_t index = 0;
+        for (size_t i = 0; i < indices.size(); i++) {
+            index += indices[i] * _strides[i];
+        }
+        return index;
     }
 
     static size_t element_count(const std::vector<size_t>& shape) {
@@ -47,6 +60,16 @@ class Tensor {
             count *= dim;
         }
         return count;
+    }
+
+    static std::vector<size_t> compute_strides(const std::vector<size_t>& shape) {
+        std::vector<size_t> strides(shape.size());
+        size_t stride = 1;
+        for (size_t i = shape.size(); i-- > 0;) {
+            strides[i] = stride;
+            stride *= shape[i];
+        }
+        return strides;
     }
 };
 

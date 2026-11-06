@@ -72,3 +72,19 @@ TEST_CASE("Tensor throws invalid argument exception for empty or zero dimensions
     REQUIRE_THROWS_AS(nn::Tensor({0, 3}), std::invalid_argument);
     REQUIRE_THROWS_AS(nn::Tensor({2, 0}), std::invalid_argument);
 }
+
+TEST_CASE("Tensor element works on 1-D tensors", "[tensor]") {
+    nn::Tensor tensor({6});
+    tensor.data()[5] = 7.0f;
+
+    REQUIRE(tensor.element({5}) == 7.0f);
+    REQUIRE_THROWS_AS(tensor.element({6}), std::out_of_range);
+}
+
+TEST_CASE("Tensor reading element with out of range index throws out_of_range exception",
+          "[tensor]") {
+    const nn::Tensor tensor({2, 3});
+
+    REQUIRE_THROWS_AS(tensor.element({1, 3}), std::out_of_range);
+    REQUIRE_THROWS_AS(tensor.element({2, 1}), std::out_of_range);
+}
