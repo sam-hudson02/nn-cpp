@@ -81,6 +81,17 @@ TEST_CASE("Tensor element works on 1-D tensors", "[tensor]") {
     REQUIRE_THROWS_AS(tensor.element({6}), std::out_of_range);
 }
 
+TEST_CASE("Tensor element is row-major in 3-D", "[tensor]") {
+    nn::Tensor tensor({2, 3, 4});
+    for (size_t i = 0; i < tensor.size(); ++i) {
+        tensor.data()[i] = float(i);
+    }
+
+    REQUIRE(tensor.element({1, 2, 3}) == 23.0f);
+    REQUIRE(tensor.element({0, 1, 0}) == 4.0f);
+    REQUIRE(tensor.element({1, 0, 0}) == 12.0f);
+}
+
 TEST_CASE("Tensor reading element with out of range index throws out_of_range exception",
           "[tensor]") {
     const nn::Tensor tensor({2, 3});
