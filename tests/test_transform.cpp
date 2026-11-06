@@ -23,3 +23,17 @@ TEST_CASE("Transpose moves each element to its swapped position", "[transform]")
         }
     }
 }
+
+TEST_CASE("Transposing twice gives back the original tensor", "[transform]") {
+    nn::Tensor input({2, 3});
+    for (size_t i = 0; i < input.size(); ++i) {
+        input.data()[i] = float(i + 1);
+    }
+
+    const nn::Tensor twice = nn::transpose(nn::transpose(input));
+
+    REQUIRE(twice.shape() == input.shape());
+    for (size_t i = 0; i < input.size(); ++i) {
+        REQUIRE(twice.data()[i] == input.data()[i]);
+    }
+}
