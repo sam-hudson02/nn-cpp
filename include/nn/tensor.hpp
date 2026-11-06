@@ -24,16 +24,15 @@ class Tensor {
     size_t size() const { return _data.size(); }
 
     const float& element(const std::vector<size_t>& indices) const {
-        if (indices.size() != _shape.size()) {
-            throw std::out_of_range("Number of indices does not match tensor dimensions");
-        }
-        // Check if any index is out of range
-        for (size_t i = 0; i < indices.size(); ++i) {
-            if (indices[i] >= _shape[i]) {
-                throw std::out_of_range("Index out of range for dimension " + std::to_string(i));
-            }
-        }
+        validate_indices(indices, _shape);
+
         return (_data[compute_index(indices)]);
+    }
+
+    void set_element(const std::vector<size_t>& indices, float value) {
+        validate_indices(indices, _shape);
+
+        _data[compute_index(indices)] = value;
     }
 
     const float* data() const { return _data.data(); }
@@ -52,6 +51,18 @@ class Tensor {
             index += indices[i] * _strides[i];
         }
         return index;
+    }
+
+    static void validate_indices(const std::vector<size_t>& indices,
+                                 const std::vector<size_t>& shape) {
+        if (indices.size() != shape.size()) {
+            throw std::out_of_range("Number of indices does not match tensor dimensions");
+        }
+        for (size_t i = 0; i < indices.size(); ++i) {
+            if (indices[i] >= shape[i]) {
+                throw std::out_of_range("Index out of range for dimension " + std::to_string(i));
+            }
+        }
     }
 
     static size_t element_count(const std::vector<size_t>& shape) {

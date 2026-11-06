@@ -47,6 +47,25 @@ TEST_CASE("Tensor can get elements by index", "[tensor]") {
     }
 }
 
+TEST_CASE("Tensor can set elements by index", "[tensor]") {
+    const size_t rows = 2;
+    const size_t cols = 3;
+
+    nn::Tensor tensor({2, 3});
+
+    for (size_t row_idx = 0; row_idx < rows; ++row_idx) {
+        for (size_t col_idx = 0; col_idx < cols; ++col_idx) {
+            const size_t index = row_idx * cols + col_idx;
+            const float input_value = float(index + 1);
+
+            tensor.set_element({row_idx, col_idx}, input_value);
+            const float stored_value = tensor.data()[index];
+
+            REQUIRE(stored_value == input_value);
+        }
+    }
+}
+
 TEST_CASE("Tensor can write an element with data method and read it back", "[tensor]") {
     nn::Tensor tensor({2, 3});
     const float value = 42.0f;
@@ -98,4 +117,12 @@ TEST_CASE("Tensor reading element with out of range index throws out_of_range ex
 
     REQUIRE_THROWS_AS(tensor.element({1, 3}), std::out_of_range);
     REQUIRE_THROWS_AS(tensor.element({2, 1}), std::out_of_range);
+}
+
+TEST_CASE("Tensor writing element with out of range index throws out_of_range exception",
+          "[tensor]") {
+    nn::Tensor tensor({2, 3});
+
+    REQUIRE_THROWS_AS(tensor.set_element({1, 3}, 42.0f), std::out_of_range);
+    REQUIRE_THROWS_AS(tensor.set_element({2, 1}, 42.0f), std::out_of_range);
 }
